@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Agents Workflow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; padding: 20px; background: #fff; }
+        h2 { font-family: Arial, sans-serif; }
+        #download-btn { margin: 15px; padding: 10px 25px; font-size: 16px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #download-btn:hover { background: #1976D2; }
+    </style>
+</head>
+<body>
+    <h2>AI Agents End-to-End Workflow</h2>
+    <button id="download-btn" onclick="downloadPNG()">Download as PNG</button>
+    <div class="mermaid" id="diagram">
+flowchart TD
+    A[User Story / Work Item ID] --> B
+
+    B["@ac-explorer 471244 - Explore AC in Browser"]
+    B --> |Captures UI workflow,\nlocators, steps| C
+
+    C["@testcase-writer US 471244 - Write Manual Test Cases"]
+    C --> |Generates test steps\nfrom exploration data| D
+
+    D["@ado-publisher - Publish to Azure DevOps"]
+    D --> |Creates Test Case work items,\nlinks to User Story| E
+
+    E["@automation-generator - Generate Automation Code"]
+    E --> |Scaffolds C# Playwright\nNUnit test methods| F
+
+    F["Run Tests: dotnet test --filter Name=TestName"]
+
+    G["@Explore - Codebase Lookup"]
+    G -.-> |Available anytime\nfor code exploration| B
+    G -.-> C
+    G -.-> E
+
+    style A fill:#4CAF50,color:#fff
+    style B fill:#2196F3,color:#fff
+    style C fill:#FF9800,color:#fff
+    style D fill:#9C27B0,color:#fff
+    style E fill:#F44336,color:#fff
+    style F fill:#009688,color:#fff
+    style G fill:#607D8B,color:#fff
+    </div>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        function downloadPNG() {
+            const svg = document.querySelector('.mermaid svg');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = function() {
+                canvas.width = img.width * 2;
+                canvas.height = img.height * 2;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const a = document.createElement('a');
+                a.download = 'AI_Agents_Workflow.png';
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+            };
+            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+        }
+    </script>
+</body>
+</html>
